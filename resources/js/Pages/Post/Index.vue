@@ -1,10 +1,10 @@
 <script setup>
 
 import { ref, computed } from 'vue';
-import { Link, router, usePage } from "@inertiajs/vue3";
+import { Link, router } from "@inertiajs/vue3";
 import PostLayout from "@/Layouts/PostLayout.vue";
 
-const { posts, pagination } = usePage().props;
+const { posts, pagination } = defineProps({ posts: Object, pagination: Object })
 
 const paginatedPosts = ref(posts);
 
@@ -52,7 +52,7 @@ const isLastPage = computed(() => {
             </Link>
         </div>
         <div v-if="posts">
-            <div v-for="post in posts" :key="post.id" class="mb-8">
+            <div v-for="post in posts" :key="post.id" class="mb-8 post-item">
                 <div class="text-xl font-semibold mb-2 border-t border-gray-400 dark:text-white dark:border-gray-100">{{ post.title }}</div>
                 <div class="text-gray-600 mb-4 dark:text-gray-100">{{ post.content }}</div>
                 <div class="flex items-center justify-between">

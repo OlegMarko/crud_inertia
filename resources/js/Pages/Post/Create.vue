@@ -1,7 +1,7 @@
 <script setup>
 
 import { reactive } from "vue";
-import { Link, router, usePage } from "@inertiajs/vue3";
+import { Link, router } from "@inertiajs/vue3";
 import PostLayout from "@/Layouts/PostLayout.vue";
 
 const { errors } = defineProps({ errors: Object });
