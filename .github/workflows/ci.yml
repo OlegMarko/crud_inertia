@@ -12,14 +12,15 @@ on:
     branches: [ main ]
 
 jobs:
-  laravel:
-    name: Laravel (PHP ${{ matrix.php-versions }})
+  laravel-test:
+    name: Laravel (PHP ${{ matrix.php-version }})
     runs-on: ubuntu-latest
 
     strategy:
       fail-fast: false
       matrix:
-        php-versions: [ 8.3 ]
+        php-version: [ 8.3 ]
+        node-version: [ 21.6 ]
 
     steps:
       - name: Checkout
@@ -28,7 +29,7 @@ jobs:
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: '8.3'
+          php-version: ${{ matrix.php-version }}
 
       - name: Copy .env
         run: php -r "file_exists('.env') || copy('.env.example', '.env');"
@@ -47,30 +48,20 @@ jobs:
           mkdir -p database
           touch database/database.sqlite
 
-      - name: Execute tests (Unit and Feature tests) via PHPUnit
-        env:
-          DB_CONNECTION: sqlite
-          DB_DATABASE: database/database.sqlite
-        run: vendor/bin/phpunit
-
-  vite:
-    name: VueJS (Node ${{ matrix.node-versions }})
-    runs-on: ubuntu-latest
-
-    strategy:
-      matrix:
-        node-version: [ 21.x ]
-
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
           cache: 'npm'
 
-      - run: npm install
-      - run: npm run build --if-present
-      - run: npm run test
+      - name: Install Package Dependencies
+        run: npm install
+
+      - name: Execute tests (Unit and Feature tests) via PHPUnit
+        env:
+          DB_CONNECTION: sqlite
+          DB_DATABASE: database/database.sqlite
+        run: vendor/bin/phpunit
+
+      - name: Execute tests via vitest
+        run: npm run test
