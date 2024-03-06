@@ -57,11 +57,14 @@ jobs:
       - name: Install Package Dependencies
         run: npm install
 
+      - name: Build Vue
+        run: npm run build
+
+      - name: Execute tests via vitest
+        run: npm run test
+
       - name: Execute tests (Unit and Feature tests) via PHPUnit
         env:
           DB_CONNECTION: sqlite
           DB_DATABASE: database/database.sqlite
         run: vendor/bin/phpunit
-
-      - name: Execute tests via vitest
-        run: npm run test
